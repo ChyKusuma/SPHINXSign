@@ -23,6 +23,7 @@ With the `SPHINXSign` namespace, we empower developers to harness the advanced c
 
 We know that Hash-Based digital signature scheme is not lattice-based and relly on the strengthness of the hash-function, thats why our default `SPHINX_256` hash function is based on SWIFFTX which is rely on "Lattice-based", here we try to achieve `Statelessness` and `Lattice-based` at once.
 
+## Lets breakdown their functionallity
 
 - `addSignedTransactionToMerkleTree(const std::string& signedTransaction)`: 
   - This function serves as an interface to add a signed transaction to a Merkle tree, which is implemented in "merkleblock.cpp". 
