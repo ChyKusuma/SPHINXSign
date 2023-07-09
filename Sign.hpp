@@ -41,8 +41,7 @@
 #include <iostream>
 #include "Lib/Sphincs/include/sphincs_inner.hpp"
 #include "Lib/Sphincs/include/hashing.hpp"
-#include "Checksum.hpp"
-#include "Hash.hpp"
+
 #include "Verify.hpp"
 #include "MerkleBlock.hpp"
 #include "Chain.hpp"
