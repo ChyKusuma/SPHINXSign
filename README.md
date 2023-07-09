@@ -27,7 +27,7 @@ Two more functions are defined within the namespace:
 - `verifySPHINXChain` takes a `const Chain&` chain as a parameter. It verifies the integrity and consistency of the chain. It returns `true` if the chain is valid, and `false` otherwise.
 
 
-### This repository is part of the  [SPHINXMerkleBlock](https://github.com/SPHINX-HUB-ORG/SPHINXMerkleBlock)
+### This repository is part of the  [SPHINXMerkleBlock](https://github.com/SPHINX-HUB-ORG/SPHINXMerkleBlock) [SPHINXBlock](https://github.com/SPHINX-HUB-ORG/SPHINXBlock) [SPHINXChain](https://github.com/SPHINX-HUB-ORG/SPHINXChain)
 
 Please note that the code in this repository is a part of the SPHINX blockchain algorithm, which is currently in development and not fully integrated or extensively tested for functionality. The purpose of this repository is to provide a framework and algorithm for the digital signature scheme in the SPHINX blockchain project.
 
