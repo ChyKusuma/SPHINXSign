@@ -4,16 +4,10 @@
 
 This project is dedicated to the world community as an Open-source Post-quantum SPHINXSign blockchain, means anyone can join and contribute based on his/ her passion and skills. SPHINX is a blockchain protocol designed to provide secure and scalable solutions in the post-quantum era.
 
-This repository contains code for the SPHINXSign project, which is a mining module for the SPHINX blockchain framework. The SPHINXSign aims to provide a “Signature scheme” in the blockchain systems.
-
-# Introduction
-
-This project is dedicated to the world community as an Open-source Post-quantum SPHINXMerkleBlock blockchain, means anyone can join and contribute based on his/ her passion and skills. SPHINX is a blockchain protocol designed to provide secure and scalable solutions in the post-quantum era.
-
-This repository contains code for the SPHINXMerkleBlock project, which is a `Merkle trees` module for the SPHINX blockchain framework. The SPHINXMerkleBlock aims to provide a "Merkle trees" in the blockchain systems
+This repository contains code for the SPHINXSign project, which is a mining module for the SPHINX blockchain framework. The SPHINXSign aims to provide a `Signature scheme` in the blockchain systems.
 
 
-# Components
+## Components
 
 #### This repository is part of [SPHINXMerkleBlock](https://github.com/SPHINX-HUB-ORG/SPHINXMerkleBlock)
 
