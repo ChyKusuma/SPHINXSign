@@ -49,14 +49,14 @@ We know that Hash-Based digital signature scheme is not lattice-based and relly 
   - The function returns a boolean value indicating whether the verification is successful (`true`) or not (`false`).
 
 - `verifySPHINXBlock(const Block& block, const std::string& signature, const PublicKey& public_key)`:
-  - This function verifies a given block in the SPHINX+ blockchain.
+  - This function verifies a given block in the SPHINX blockchain.
   - It takes a `Block` object, a signature as a string, and a public key as input.
   - First, it verifies the signature of the block using the `verify_data` function.
   - Then, it verifies the Merkle root of the block by calling the `verifyMerkleRoot()` function from the `SPHINXMerkleBlock` namespace in "merkleblock.cpp".
   - The function returns `true` if both the signature and Merkle root are valid, and `false` otherwise.
 
 - `verifySPHINXChain(const Chain& chain)`:
-  - This function verifies the integrity and consistency of a given SPHINX+ chain.
+  - This function verifies the integrity and consistency of a given SPHINX chain.
   - It takes a `Chain` object as input.
   - It internally calls the `verifyChainIntegrity()` function, which checks the integrity and consistency of the chain by verifying each block and validating the chain's Merkle root.
   - The function returns `true` if the chain is valid, and `false` otherwise.
