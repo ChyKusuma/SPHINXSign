@@ -27,22 +27,40 @@ We know that Hash-Based digital signature scheme is not lattice-based and relly 
 
 ## Components
 
-The code defines the `SPHINXSign` namespace to encapsulate its functionality.
+- `addSignedTransactionToMerkleTree(const std::string& signedTransaction)`: 
+  - This function serves as an interface to add a signed transaction to a Merkle tree, which is implemented in "merkleblock.cpp". 
+  - It creates an instance of the `MerkleBlock` class from "merkleblock.cpp" and constructs the Merkle tree by passing the signed transaction as a parameter.
 
-The code defines a function named `addSignedTransactionToMerkleTree` that takes a `const std::string&` parameter named `signedTransaction`. This function is intended as an interface function to add a signed transaction to a Merkle tree defined in "merkleblock.cpp". The function constructs the Merkle tree with the given signed transaction.
+- `generate_keypair()`:
+  - This function generates a key pair using the SPHINCS+ key generation algorithm.
+  - It calls the `generateKeyPair()` function from the `SPHINXKey` namespace in "Key.cpp" to generate the key pair.
+  - The generated key pair is then converted into vectors and returned as a pair.
 
-A `struct` named `KeyPair` is defined within the namespace. It contains two arrays: `secret_key` and `public_key`, each declared as `uint8_t` and with sizes defined by `sphincs_inner::SECRETKEY_BYTES` and `sphincs_inner::PUBLICKEY_BYTES` respectively.
+- `addSignedTransactionToMerkleTree(const std::string& signedTransaction)`:
+  - This function adds a signed transaction to the Merkle tree.
+  - It extracts the transaction data, signature, and public key from the provided `signedTransaction`.
+  - It then verifies the signature using the `verify_data` function.
+  - If the verification is successful, it creates a `SignedTransaction` object with the signed transaction details and adds it to the Merkle tree instance using the `addTransaction()` function.
+  - If the signature verification fails, it outputs an error message to `std::cerr`.
 
-A function named `generate_keypair` is defined. It generates a key pair using the `sphincs_inner::keygen` function from the inner namespace. The generated key pair is converted into vectors and returned as a pair.
+- `verify_data(const std::vector<uint8_t>& data, const std::string& signature, const uint8_t* public_key)`:
+  - This function verifies the authenticity of the provided data using the SPHINCS+ verification algorithm.
+  - It calls the `verify` function from the `sphincs_inner` namespace with the data, signature, and public key as parameters.
+  - The function returns a boolean value indicating whether the verification is successful (`true`) or not (`false`).
 
-Another function named `addSignedTransactionToMerkleTree` is defined within the namespace. This function takes a `const std::string&` parameter named `signedTransaction`. It extracts the transaction data, signature, and public key from the input. It then verifies the signature using the `verify_data` function and adds the signed transaction to the Merkle tree if the verification is successful. Otherwise, it outputs an error message to `std::cerr`.
+- `verifySPHINXBlock(const Block& block, const std::string& signature, const PublicKey& public_key)`:
+  - This function verifies a given block in the SPHINX+ blockchain.
+  - It takes a `Block` object, a signature as a string, and a public key as input.
+  - First, it verifies the signature of the block using the `verify_data` function.
+  - Then, it verifies the Merkle root of the block by calling the `verifyMerkleRoot()` function from the `SPHINXMerkleBlock` namespace in "merkleblock.cpp".
+  - The function returns `true` if both the signature and Merkle root are valid, and `false` otherwise.
 
-A function named `verify_data` is defined within the namespace. It takes the data (as a `const std::vector<uint8_t>&`), signature (as a `const std::string&`), and public key (as a `const uint8_t*`). This function calls the `sphincs_inner::verify` function from the inner namespace to verify the data against the signature and public key.
+- `verifySPHINXChain(const Chain& chain)`:
+  - This function verifies the integrity and consistency of a given SPHINX+ chain.
+  - It takes a `Chain` object as input.
+  - It internally calls the `verifyChainIntegrity()` function, which checks the integrity and consistency of the chain by verifying each block and validating the chain's Merkle root.
+  - The function returns `true` if the chain is valid, and `false` otherwise.
 
-Two more functions are defined within the namespace:
-
-- `verifySPHINXBlock` takes a `const Block&`, a `const std::string&` signature, and a `const PublicKey&` public key as parameters. It verifies the signature of the block using the provided signature and public key, and then verifies the Merkle root of the block. It returns `true` if both verifications pass, and `false` otherwise.
-- `verifySPHINXChain` takes a `const Chain&` chain as a parameter. It verifies the integrity and consistency of the chain. It returns `true` if the chain is valid, and `false` otherwise.
 
 
 ### This repository is part of the  [SPHINXMerkleBlock](https://github.com/SPHINX-HUB-ORG/SPHINXMerkleBlock) [SPHINXBlock](https://github.com/SPHINX-HUB-ORG/SPHINXBlock) [SPHINXChain](https://github.com/SPHINX-HUB-ORG/SPHINXChain)
