@@ -6,6 +6,30 @@ This project is dedicated to the world community as an Open-source Post-quantum 
 
 This repository contains code for the SPHINXSign project, which is a mining module for the SPHINX blockchain framework. The SPHINXSign aims to provide a “Signature scheme” in the blockchain systems.
 
+## Introduction
+
+This project is dedicated to the world community as an Open-source Post-quantum SPHINXMerkleBlock blockchain, means anyone can join and contribute based on his/ her passion and skills. SPHINX is a blockchain protocol designed to provide secure and scalable solutions in the post-quantum era.
+
+This repository contains code for the SPHINXMerkleBlock project, which is a `Merkle trees` module for the SPHINX blockchain framework. The SPHINXMerkleBlock aims to provide a "Merkle trees" in the blockchain systems
+
+
+## Components
+
+## This repository is part of [SPHINXMerkleBlock](https://github.com/SPHINX-HUB-ORG/SPHINXMerkleBlock)
+
+The `SPHINX_MerkleBlock` namespace leverages the power of Merkle trees based on the state-of-the-art [SPHINCS+](https://sphincs.org/) principle, which emerged as the 4th winner in the "Post-Quantum" cryptography competition held by the National Institute of Standards and Technology ([NIST](https://www.nist.gov/publications/breaking-category-five-sphincs-sha-256)).
+
+SPHINCS+ (Stateless PHotonic Isogeny-based Signature Scheme) is a groundbreaking hybrid signature scheme that combines robust hash-based, code-based, and isogeny-based cryptographic components. Its primary goal is to achieve two critical properties: "statelessness" and post-quantum security.
+
+In the advent of quantum computers, which have the potential to render traditional cryptographic algorithms vulnerable, the elimination or reduction of reliance on state becomes imperative. Quantum computers, with their ability to exist in multiple states simultaneously, pose significant risks to storing sensitive content in state. The concept of "statelessness" in SPHINCS+ aims to mitigate these risks by eliminating the reliance on state, providing resilience against attacks by powerful quantum computers.
+
+Unlike alternative post-quantum digital signature algorithms such as [Crystals-dilithium](https://pq-crystals.org/dilithium/), which offer high levels of security but are susceptible to side-channel attacks, our decision to employ SPHINCS+ as the foundation for our Merkle tree scheme and digital signature scheme ensures both the robustness against quantum adversaries and resistance to side-channel attacks.
+
+With the SPHINX_MerkleBlock namespace, we empower developers to harness the advanced capabilities of SPHINCS+ and build secure, future-proof applications that can withstand the challenges posed by the dawn of the quantum era.
+
+We know that Hash-Based digital signature scheme is not lattice-based and relly on the strengthness of the hash-function, thats why our default `SPHINX_256` hash function is based on SWIFFTX which is rely on "Lattice-based", here we try to achieve `Statelessness` and `Lattice-based` at once.
+
+
 
 ## Components
 
