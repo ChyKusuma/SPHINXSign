@@ -12,44 +12,21 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-// This code defines a namespace SPHINXSign which contains functions related to generating key pairs, signing data, and verifying signatures using the SPHINCS+ cryptographic scheme.
+// The provided code implements the SPHINCS+ digital signature scheme and integrates it with a Merkle tree scheme implemented in "merkleblock.cpp". Let's break down the code and explain each component in detail:
 
-  // The code defines a struct KeyPair containing two arrays: secret_key and public_key. These arrays store the secret key and public key, respectively, used in the SPHINCS+ cryptographic scheme.
+  // addSignedTransactionToMerkleTree(const std::string& signedTransaction): This function is an interface function responsible for adding a signed transaction to the Merkle tree. It creates an instance of the MerkleBlock class from "merkleblock.cpp" and constructs the Merkle tree with the provided signed transaction.
 
-  // generate_keypair() is a function that generates a key pair using the SPHINCS+ key generation function from the inner namespace (sphincs_inner). The function returns the key pair as a pair of vectors: the secret key as std::vector<uint8_t> and the public key as std::vector<uint8_t>.
+  // generate_keypair(): This function generates a key pair using the SPHINCS+ key generation algorithm. It calls the generateKeyPair() function from the SPHINXKey namespace in "Key.cpp" to generate the key pair. The generated key pair is then converted from arrays to vectors and returned as a pair of vectors.
 
-// sign_data() is a function used to sign data. It takes three parameters:
+  // addSignedTransactionToMerkleTree(const std::string& signedTransaction): This function is another interface function responsible for adding a signed transaction to the Merkle tree. It extracts the signed transaction data, signature, and public key from the input. It then verifies the signature using the verify_data() function and if the verification is successful, creates a SignedTransaction object with the signed transaction data, signature, public key, and converted data vector. Finally, it adds the signed transaction to the Merkle tree instance using the addTransaction() function.
 
-  // data: A std::vector<uint8_t> containing the data to be signed.
-  // secret_key: A pointer to the secret key (raw array of bytes).
-  // verifier_public_key: A pointer to the verifier's public key (raw array of bytes).
-  // The function calculates the signature using the SPHINCS+ signing function from the inner namespace and then forwards the signature and verifier's public key to the verifier (presumably, the SPHINXVerify::verify_data function) for further verification. It returns the signature as a string.
-  
-// verify_data() is a function used to verify the signature of the data. It takes three parameters:
+  // verify_data(const std::vector<uint8_t>& data, const std::string& signature, const uint8_t* public_key): This function is responsible for verifying the authenticity of the provided data using the SPHINCS+ verification algorithm. It calls the verify function from the sphincs_inner namespace with the provided data, signature, and public key. The function returns a boolean indicating whether the verification is successful or not.
 
-  // data: A std::vector<uint8_t> containing the data whose signature needs to be verified.
-  // signature: A string containing the signature of the data.
-  // public_key: A pointer to the public key (raw array of bytes) of the signer.
-  // The function verifies the signature using the SPHINCS+ verification function from the inner namespace and returns a boolean indicating whether the signature is valid (true) or not (false).
+  // verifySPHINXBlock(const Block& block, const std::string& signature, const PublicKey& public_key): This function verifies a given block in the SPHINX+ blockchain. It takes a block object, a signature, and a public key as input. It first verifies the block's signature using the verify_data() function. Then, it verifies the Merkle root of the block by calling the verifyMerkleRoot() function from the SPHINXMerkleBlock namespace in "merkleblock.cpp". The function returns a boolean indicating whether both the signature and Merkle root are valid.
 
-// verifySPHINXBlock() is a function used to verify a given block in the SPHINX blockchain. It takes three parameters:
+  // verifySPHINXChain(const Chain& chain): This function verifies the integrity and consistency of a given SPHINX+ chain. It takes a chain object as input. It internally calls the verifyChainIntegrity() function, which checks the integrity and consistency of the chain by verifying each block and validating the chain's Merkle root. The function returns a boolean indicating whether the chain is valid.
 
-  // block: A Block object representing the block to be verified.
-  // signature: A string containing the signature of the block.
-  // public_key: A PublicKey object representing the public key of the signer.
-
-// The function performs two verification steps:
-  // Step 1: Verify the signature of the block using the provided signature and public key by calling the verify_data() function.
-  // Step 2: Verify the Merkle root of the block using the SPHINXMerkleBlock::verifyMerkleRoot() function.
-  // The function returns true if both verification steps are successful; otherwise, it returns false.
-
-// verifySPHINXChain() is a function used to verify the entire SPHINX blockchain. It takes a Chain object as a parameter. The function performs the following steps:
-
-  // Step 1: Verify the integrity and consistency of the chain by calling verifyChainIntegrity(chain).
-  // Step 2: Execute the protocol to verify the chain by calling executeChainVerificationProtocol(chain).
-  // The function returns true if both steps are successful; otherwise, it returns false.
-
-// In summary, this code provides functions to generate key pairs, sign data, and verify signatures using the SPHINCS+ cryptographic scheme. The actual implementations of the SPHINCS+ cryptographic functions (such as key generation, signing, and verification) are assumed to be provided in the sphincs_inner namespace.
+// The code provides an interface for adding signed transactions to a Merkle tree and verifies the authenticity of the data using the SPHINCS+ digital signature scheme. It also includes functions to verify individual blocks and the entire chain in the SPHINX+ blockchain. The integration with the Merkle tree scheme allows for efficient verification and tamper detection of transactions in the blockchain.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -69,6 +46,7 @@
 #include "Verify.hpp"
 #include "MerkleBlock.hpp"
 #include "Chain.hpp"
+#include "Key.hpp"
 
 
 namespace SPHINXSign {
@@ -79,20 +57,14 @@ namespace SPHINXSign {
         merkleBlock.constructMerkleTree({signedTransaction});
     }
 
-    struct KeyPair {
-        uint8_t secret_key[sphincs_inner::SECRETKEY_BYTES];
-        uint8_t public_key[sphincs_inner::PUBLICKEY_BYTES];
-    };
-
     // Function to generate a key pair
     std::pair<std::vector<uint8_t>, std::vector<uint8_t>> generate_keypair() {
-        KeyPair keypair;
-        // Call the key generation function from the inner namespace
-        sphincs_inner::keygen<SPHINCS_N, SPHINCS_H, SPHINCS_D, SPHINCS_W, SPHINCS_V>(keypair.secret_key, keypair.public_key);
+        // Call the generateKeyPair() function from the SPHINXKey namespace in "Key.cpp"
+        SPHINXKey::HybridKeypair hybridKeyPair = SPHINXKey::generateKeyPair();
 
         // Convert the key pair arrays to vectors
-        std::vector<uint8_t> secret_key(keypair.secret_key, keypair.secret_key + sphincs_inner::SECRETKEY_BYTES);
-        std::vector<uint8_t> public_key(keypair.public_key, keypair.public_key + sphincs_inner::PUBLICKEY_BYTES);
+        std::vector<uint8_t> secret_key(hybridKeyPair.secret_key, hybridKeyPair.secret_key + sphincs_inner::SECRETKEY_BYTES);
+        std::vector<uint8_t> public_key(hybridKeyPair.public_key, hybridKeyPair.public_key + sphincs_inner::PUBLICKEY_BYTES);
 
         // Return the key pair as a pair of vectors
         return { secret_key, public_key };
