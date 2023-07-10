@@ -63,9 +63,9 @@ Digital signature scheme like [Gottesman-chuang](https://www.researchgate.net/pu
 
 
 
-### This repository is part of the  [SPHINXMerkleBlock](https://github.com/SPHINX-HUB-ORG/SPHINXMerkleBlock) [SPHINXBlock](https://github.com/SPHINX-HUB-ORG/SPHINXBlock) [SPHINXChain](https://github.com/SPHINX-HUB-ORG/SPHINXChain)
+### Note
 
-Please note that the code in this repository is a part of the SPHINX blockchain algorithm, which is currently in development and not fully integrated or extensively tested for functionality. The purpose of this repository is to provide a framework and algorithm for the digital signature scheme in the SPHINX blockchain project.
+Every code in the repository is a part of the SPHINX blockchain algorithm, which is currently in development and not fully integrated or extensively tested for functionality. The purpose of this repository is to provide a framework and algorithm for the digital signature scheme in the SPHINX blockchain project.
 
 As the project progresses, further updates and enhancements will be made to ensure the code's stability and reliability. We encourage contributors to participate in improving and refining the SPHINXBlock algorithm by submitting pull requests and providing valuable insights.
 
