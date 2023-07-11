@@ -6,7 +6,6 @@ This project is dedicated to the world community as an Open-source Post-quantum 
 
 This repository contains code for the SPHINXSign project, which is a `Digital signature` module for the SPHINX blockchain framework.
 
-
 ## Components
 
 #### This repository is part of [SPHINXMerkleBlock](https://github.com/SPHINX-HUB-ORG/SPHINXMerkleBlock)
