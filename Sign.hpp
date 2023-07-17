@@ -39,36 +39,19 @@
 #include <string>
 #include <vector>
 #include <iostream>
+
 #include "Lib/Sphincs/include/sphincs_inner.hpp"
 #include "Lib/Sphincs/include/hashing.hpp"
-
+#include "Checksum.hpp"
+#include "Hash.hpp"
 #include "Verify.hpp"
 #include "MerkleBlock.hpp"
 #include "Chain.hpp"
 #include "Key.hpp"
+#include "Trx.hpp"
 
 
 namespace SPHINXSign {
-    // Interface function to add a signed transaction to the Merkle tree in "merkleblock.cpp"
-    void addSignedTransactionToMerkleTree(const std::string& signedTransaction) {
-        SPHINXMerkleBlock::MerkleBlock merkleBlock;
-        // Construct the Merkle tree with the signed transaction
-        merkleBlock.constructMerkleTree({signedTransaction});
-    }
-
-    // Function to generate a key pair
-    std::pair<std::vector<uint8_t>, std::vector<uint8_t>> generate_keypair() {
-        // Call the generateKeyPair() function from the SPHINXKey namespace in "Key.cpp"
-        SPHINXKey::HybridKeypair hybridKeyPair = SPHINXKey::generateKeyPair();
-
-        // Convert the key pair arrays to vectors
-        std::vector<uint8_t> secret_key(hybridKeyPair.secret_key, hybridKeyPair.secret_key + sphincs_inner::SECRETKEY_BYTES);
-        std::vector<uint8_t> public_key(hybridKeyPair.public_key, hybridKeyPair.public_key + sphincs_inner::PUBLICKEY_BYTES);
-
-        // Return the key pair as a pair of vectors
-        return { secret_key, public_key };
-    }
-
     // Interface function to add a signed transaction to the Merkle tree in "merkleblock.cpp"
     void addSignedTransactionToMerkleTree(const std::string& signedTransaction) {
         // Get the signed transaction data, signature, and public key from the input
@@ -78,14 +61,14 @@ namespace SPHINXSign {
 
         // Verify the signature before adding it to the Merkle tree
         if (verify_data(transactionData, signature, publicKey)) {
-            SPHINXMerkleBlock::SignedTransaction signedTrx;
-            signedTrx.transaction = signedTransaction;
-            signedTrx.signature = signature;
-            signedTrx.public_key = publicKey;
-            signedTrx.data = std::vector<uint8_t>(transactionData.begin(), transactionData.end());
+            SPHINXMerkleBlock::SignedTransaction signedTransaction;
+            signedTransaction.transaction = transactionData;
+            signedTransaction.signature = signature;
+            signedTransaction.public_key = publicKey;
+            signedTransaction.data = std::vector<uint8_t>(transactionData.begin(), transactionData.end());
 
             // Add the signed transaction to the Merkle tree
-            SPHINXMerkleBlock::MerkleBlock::getInstance().addTransaction(signedTrx);
+            SPHINXMerkleBlock::MerkleBlock::getInstance().addTransaction(signedTransaction);
         } else {
             // Signature verification failed, handle the error accordingly
             std::cerr << "ERROR: Invalid signature for transaction: " << signedTransaction << std::endl;
@@ -103,7 +86,7 @@ namespace SPHINXSign {
 
     bool verifySPHINXBlock(const Block& block, const std::string& signature, const PublicKey& public_key) {
         // Step 1: Verify the signature of the block using the provided signature and public key
-        bool isSignatureValid = SPHINXSign::verify_data(block.getData(), signature, public_key);
+        bool isSignatureValid = SPHINXVerify::verify_data(block.getData(), signature, public_key);
 
         // Step 2: Verify the Merkle root of the block
         bool isMerkleRootValid = SPHINXMerkleBlock::verifyMerkleRoot(block.getMerkleRoot(), block.getTransactions());
