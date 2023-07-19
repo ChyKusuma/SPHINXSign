@@ -48,19 +48,21 @@
 #include "MerkleBlock.hpp"
 #include "Chain.hpp"
 #include "Key.hpp"
-#include "Trx.hpp"
+#include "Transaction.hpp"
 
 
 namespace SPHINXSign {
     // Interface function to add a signed transaction to the Merkle tree in "merkleblock.cpp"
-    void addSignedTransactionToMerkleTree(const std::string& signedTransaction) {
+    void addSignedTransactionToMerkleTree(const std::string& signedTransaction, const uint8_t* privateKey) {
         // Get the signed transaction data, signature, and public key from the input
         std::string transactionData = extractTransactionData(signedTransaction);
-        std::string signature = extractSignature(signedTransaction);
         PublicKey publicKey = extractPublicKey(signedTransaction);
 
+        // Sign the transaction data using the private key by calling the sign_data function from SPHINXVerify
+        std::string signature = SPHINXVerify::sign_data(std::vector<uint8_t>(transactionData.begin(), transactionData.end()), privateKey);
+
         // Verify the signature before adding it to the Merkle tree
-        if (verify_data(transactionData, signature, publicKey)) {
+        if (!signature.empty() && verify_data(transactionData, signature, publicKey)) {
             SPHINXMerkleBlock::SignedTransaction signedTransaction;
             signedTransaction.transaction = transactionData;
             signedTransaction.signature = signature;
@@ -70,12 +72,12 @@ namespace SPHINXSign {
             // Add the signed transaction to the Merkle tree
             SPHINXMerkleBlock::MerkleBlock::getInstance().addTransaction(signedTransaction);
         } else {
-            // Signature verification failed, handle the error accordingly
+            // Signature verification failed or signature is empty, handle the error accordingly
             std::cerr << "ERROR: Invalid signature for transaction: " << signedTransaction << std::endl;
         }
     }
 
-    // Function to verify data
+    // Function to verify data (unchanged)
     bool verify_data(const std::vector<uint8_t>& data, const std::string& signature, const uint8_t* public_key) {
         // Call the verification function from the inner namespace
         bool valid = sphincs_inner::verify<SPHINCS_N, SPHINCS_H, SPHINCS_D, SPHINCS_W, SPHINCS_V>(
@@ -86,7 +88,7 @@ namespace SPHINXSign {
 
     bool verifySPHINXBlock(const Block& block, const std::string& signature, const PublicKey& public_key) {
         // Step 1: Verify the signature of the block using the provided signature and public key
-        bool isSignatureValid = SPHINXVerify::verify_data(block.getData(), signature, public_key);
+        bool isSignatureValid = SPHINXVerify::verifySPHINXBlock(block, signature, public_key);
 
         // Step 2: Verify the Merkle root of the block
         bool isMerkleRootValid = SPHINXMerkleBlock::verifyMerkleRoot(block.getMerkleRoot(), block.getTransactions());
