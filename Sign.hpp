@@ -68,7 +68,6 @@
 #include "Checksum.hpp"
 #include "Hash.hpp"
 #include "Verify.hpp"
-#include "MerkleBlock.hpp"
 #include "Chain.hpp"
 #include "Key.hpp"
 #include "Transaction.hpp"
@@ -181,6 +180,22 @@ namespace SPHINXSign {
             std::cerr << "ERROR: Missing 'transaction_data' field in the signed transaction JSON." << std::endl;
             return "";
         }
+    }
+
+    // Function to sign the transaction data using SPHINCS+ signature
+    std::string signTransactionData(const std::string& transactionData, const SPHINXPrivKey& privateKey) {
+        // Perform the signing using the sign function from "Sphincs.hpp"
+        std::string signature;
+        if (transactionData.size() > 0) {
+            signature.resize(SPHINCS_N * 4); // Size of SPHINCS+ signature
+            sphincs::sign<SPHINCS_N, SPHINCS_H, SPHINCS_D, SPHINCS_A, SPHINCS_K, SPHINCS_W, SPHINCS_V>(
+                reinterpret_cast<const uint8_t*>(transactionData.data()), transactionData.size(),
+                privateKey.data(), reinterpret_cast<uint8_t*>(signature.data())
+            );
+        } else {
+            throw std::runtime_error("ERROR: Empty transaction data.");
+        }
+        return signature;
     }
 
     // Function to extract the public key from the signed transaction
